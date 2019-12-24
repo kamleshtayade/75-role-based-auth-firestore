@@ -1,0 +1,38 @@
+# Rules for Any Document
+
+match /posts/{document} {
+
+  function getRole(role) {
+    return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+  }
+  
+  allow read: if getRole('subscriber') == true;
+  allow update: if getRole('editor') == true;
+  allow create, delete: if getRole('admin') == true;
+
+}
+
+# Rules for the User Document
+match /users/{document} {
+
+  function getRole(role) {
+    return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+  }
+
+  allow read;
+  allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor']) == false;
+  allow update: if getRole('admin') == true;
+}
+
+# Rules for Admin user to update role of other users
+
+match /users/{userId} {
+  function getRole(role) {
+    return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+  }
+  
+  allow read: if request.auth.uid != null;
+  allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor', 'subscriber']) == false;
+  allow update: if getRole('admin') == true || request.resource.data.roles.keys().hasAny(['admin', 'editor', 'subscriber']) == false && request.auth.uid == userId;
+}
+
