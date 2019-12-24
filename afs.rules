@@ -33,6 +33,8 @@ match /users/{userId} {
   
   allow read: if request.auth.uid != null;
   allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor', 'subscriber']) == false;
-  allow update: if getRole('admin') == true || request.resource.data.roles.keys().hasAny(['admin', 'editor', 'subscriber']) == false && request.auth.uid == userId;
+  allow update: if getRole('admin') == true || 
+          request.resource.data.roles.keys().hasAny(['admin', 'editor', 'subscriber']) 
+          == false && request.auth.uid == userId;
 }
 
