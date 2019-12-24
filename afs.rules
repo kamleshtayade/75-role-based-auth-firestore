@@ -1,4 +1,4 @@
-# Rules for Any Document
+# Rules for Any Document - 'posts'
 
 match /posts/{document} {
 
@@ -12,7 +12,7 @@ match /posts/{document} {
 
 }
 
-# Rules for the User Document
+# Rules for the User Document - roles key update access
 match /users/{document} {
 
   function getRole(role) {
@@ -24,7 +24,7 @@ match /users/{document} {
   allow update: if getRole('admin') == true;
 }
 
-# Rules for Admin user to update role of other users
+# Rules for Admin user to update role of other users - roles key update access 
 
 match /users/{userId} {
   function getRole(role) {
