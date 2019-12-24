@@ -1,4 +1,4 @@
-# Rules for Any Document - 'posts'
+# Rules for Any Document in firestore - 'posts'
 
 match /posts/{document} {
 
